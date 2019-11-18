@@ -8,7 +8,7 @@ function Tower.new(row, col)
 
    self.radius = 5
    self.identifier = 'T'
-   self.cow = col
+   self.col = col
    self.row = row
 
    return self

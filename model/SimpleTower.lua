@@ -1,6 +1,6 @@
 #!/usr/bin/env lua
 
-local Tower = require 'Tower'
+local Tower = require '../model/Tower'
 
 local SimpleTower = {}
 SimpleTower.__index = SimpleTower

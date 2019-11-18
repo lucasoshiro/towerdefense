@@ -1,7 +1,7 @@
 #!/usr/bin/env lua
 
-local Tower = require 'Tower'
-local SimpleTower = require 'SimpleTower'
+local Tower = require '../model/Tower'
+local SimpleTower = require '../model/SimpleTower'
 
 local Grid = {}
 Grid.__index = Grid
@@ -47,14 +47,5 @@ function Grid.add_tower(self, row, col, tower_type)
    self.grid[row+1][col]   = tower
    self.grid[row+1][col+1] = tower
 end
-
-grid = Grid.new()
-
-grid:add_tower(4, 4, Tower)
-grid:add_tower(8, 8, SimpleTower)
-
-grid:print()
-
-print(#grid.towers)
 
 return Grid
