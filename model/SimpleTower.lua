@@ -1,6 +1,6 @@
 #!/usr/bin/env lua
 
-local Tower = require '../model/Tower'
+local Tower        = require '../model/Tower'
 local SimpleBullet = require '../model/SimpleBullet'
 
 local SimpleTower = setmetatable({}, Tower)

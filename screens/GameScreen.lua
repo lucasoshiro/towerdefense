@@ -1,11 +1,9 @@
 #!/usr/bin/env lua
 
-local GameScreen = {}
-local Grid = require '../model/Grid'
+
+local Game        = require '../model/Game'
+local Enemy       = require '../model/Enemy'
 local SimpleTower = require '../model/SimpleTower'
-local SimpleBullet = require '../model/SimpleBullet'
-local Game = require '../model/Game'
-local Enemy = require '../model/Enemy'
 
 local grid_offx, grid_offy = 10, 10
 local cell_side = 14
@@ -13,6 +11,8 @@ local border = 1
 
 game = Game.new()
 game:add_enemy(Enemy.new(0, 20, 1, 5))
+
+local GameScreen = {}
 
 function GameScreen.draw()
    draw_grid()
@@ -25,7 +25,8 @@ function GameScreen.update(dt)
 end
 
 function GameScreen.mousepressed(x, y, button, istouch, presses)
-   print(x, y)
+   -- print(x, y)
+   if x == 0 or y == 0 then return end
    local col, row = xy_to_coord(x, y)
    game:add_tower(row, col, SimpleTower)
 end

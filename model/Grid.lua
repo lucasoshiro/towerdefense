@@ -1,8 +1,5 @@
 #!/usr/bin/env lua
 
-local Tower = require '../model/Tower'
-local SimpleTower = require '../model/SimpleTower'
-
 local Grid = {}
 Grid.__index = Grid
 
