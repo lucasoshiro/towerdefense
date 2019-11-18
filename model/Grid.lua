@@ -38,6 +38,12 @@ function Grid.print(self)
 end
 
 function Grid.add_tower(self, row, col, tower_type)
+   if self.grid[row][col]     or
+      self.grid[row][col+1]   or
+      self.grid[row+1][col]   or
+      self.grid[row+1][col+1]
+   then return false end
+
    local tower = tower_type.new(row, col)
 
    self.towers[#self.towers + 1] = tower
@@ -46,6 +52,8 @@ function Grid.add_tower(self, row, col, tower_type)
    self.grid[row][col+1]   = tower
    self.grid[row+1][col]   = tower
    self.grid[row+1][col+1] = tower
+
+   return true
 end
 
 return Grid
