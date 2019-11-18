@@ -4,21 +4,20 @@ local GameScreen = {}
 local Grid = require '../model/Grid'
 local Tower = require '../model/Tower'
 
+local grid_offx, grid_offy = 10, 10
+local cell_side = 14
+local border = 1
+
 g = Grid.new()
-g:add_tower(2, 4, Tower)
 
 function GameScreen.draw()
-   local x_offset, y_offset = 10, 10
-   local cell_side = 14
-   local border = 1
-
    love.graphics.setColor(0.2, 0.9, 1)
 
    for i = 1, g.height do
       for j = 1, g.width do
 	 love.graphics.rectangle("fill",
-				 x_offset + cell_side * i + border,
-				 y_offset + cell_side * j + border,
+				 grid_offx + cell_side * i + border,
+				 grid_offy + cell_side * j + border,
 				 cell_side - 2*border, cell_side - 2*border)
       end
    end
@@ -27,12 +26,22 @@ function GameScreen.draw()
 
    for _, tower in ipairs(g.towers) do
       love.graphics.rectangle("fill",
-			      x_offset + cell_side * tower.col + border,
-			      y_offset + cell_side * tower.row + border,
+			      grid_offx + cell_side * tower.col + border,
+			      grid_offy + cell_side * tower.row + border,
 			      2*cell_side - 2*border, 2*cell_side - 2*border)
 
    end
+end
 
+function GameScreen.mousepressed(x, y, button, istouch, presses)
+   local col, row = xy_to_coord(x, y)
+   g:add_tower(row, col, Tower)
+end
+
+function xy_to_coord(x, y)
+   local c_x = math.floor((x - grid_offx) / cell_side)
+   local c_y = math.floor((y - grid_offy) / cell_side)
+   return c_x, c_y
 end
 
 return GameScreen

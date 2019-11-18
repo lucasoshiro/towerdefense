@@ -15,3 +15,7 @@ end
 function love.draw()
    current_screen.draw()
 end
+
+function love.mousepressed(x, y, button, istouch, presses)
+   current_screen.mousepressed(x, y, button, istouch, presses)
+end
