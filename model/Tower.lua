@@ -5,6 +5,7 @@ Tower.__index = Tower
 
 function Tower.new(row, col)
    local self = setmetatable({}, Tower)
+   self.__index = self
 
    self.radius = 5
    self.identifier = 'T'

@@ -5,16 +5,19 @@ local Grid = require '../model/Grid'
 local SimpleTower = require '../model/SimpleTower'
 local SimpleBullet = require '../model/SimpleBullet'
 local Game = require '../model/Game'
+local Enemy = require '../model/Enemy'
 
 local grid_offx, grid_offy = 10, 10
 local cell_side = 14
 local border = 1
 
 game = Game.new()
+game:add_enemy(Enemy.new(0, 20, 1, 5))
 
 function GameScreen.draw()
    draw_grid()
    draw_bullets()
+   draw_enemies()
 end
 
 function GameScreen.update(dt)
@@ -67,6 +70,15 @@ function draw_bullets()
    love.graphics.setColor(0.0, 0.0, 1)
    for bullet, _ in pairs(game.bullets) do
       local x, y = coord_to_xy(bullet.x, bullet.y)
+      love.graphics.circle("fill", x, y, 5)
+   end
+end
+
+function draw_enemies()
+   love.graphics.setColor(0.5, 0.5, 0)
+
+   for enemy, _ in pairs(game.enemies) do
+      local x, y = coord_to_xy(enemy.x, enemy.y)
       love.graphics.circle("fill", x, y, 5)
    end
 end

@@ -11,6 +11,7 @@ function Game.new()
    self.grid = Grid.new()
    self.towers = {}
    self.bullets = {}
+   self.enemies = {}
 
    return self
 end
@@ -32,10 +33,19 @@ function Game.add_bullet(self, bullet)
    self.bullets[bullet] = true
 end
 
+function Game.add_enemy(self, enemy)
+   self.enemies[enemy] = true
+end
+
 function Game.update(self, dt)
    for bullet, _ in pairs(self.bullets) do
       if not bullet:alive() then self.bullets[bullet] = nil end
       bullet:update(dt)
+   end
+
+   for enemy, _ in pairs(self.enemies) do
+      if not enemy:alive() then self.enemy[enemy] = nil end
+      enemy:update(dt)
    end
 end
 
