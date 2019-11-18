@@ -15,7 +15,7 @@ end
 
 function GameScreen.mousepressed(x, y, button, istouch, presses)
    if x == 0 or y == 0 then return end
-   GridComponent:mousepressed(x, y)
+   grid_component:mousepressed(x, y)
 end
 
 return GameScreen
