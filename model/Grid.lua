@@ -19,7 +19,7 @@ function Grid.new(init)
   return self
 end
 
-function Grid.print(self)
+function Grid:print()
    for i = 1, self.height do
       for j = 1, self.width do
 	 if self.grid[i][j] then
@@ -33,14 +33,14 @@ function Grid.print(self)
    end
 end
 
-function Grid.has_space_for_tower(self, row, col)
+function Grid:has_space_for_tower(row, col)
    return not (self.grid[row][col]     or
                self.grid[row][col+1]   or
                self.grid[row+1][col]   or
                self.grid[row+1][col+1])
 end
 
-function Grid.add_tower(self, row, col, tower)
+function Grid:add_tower(row, col, tower)
    self.grid[row][col]     = tower
    self.grid[row][col+1]   = tower
    self.grid[row+1][col]   = tower

@@ -19,12 +19,12 @@ function Bullet.new(x, y, angle, vel)
    return self
 end
 
-function Bullet.alive(self)
+function Bullet:alive()
    local delta_x, delta_y = self.x - self.origin_x, self.y - self.origin_y
    return math.sqrt((delta_x * delta_x) + (delta_y * delta_y)) <= self.distance
 end
 
-function Bullet.update(self, dt)
+function Bullet:update(dt)
    self.x = self.x + self.vel_x * dt
    self.y = self.y + self.vel_y * dt
 end

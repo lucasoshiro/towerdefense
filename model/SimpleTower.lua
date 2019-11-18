@@ -16,7 +16,7 @@ function SimpleTower.new(row, col)
    return self
 end
 
-function SimpleTower.shoot(self)
+function SimpleTower:shoot()
    return {
       SimpleBullet.new(self.col+1, self.row+1, 0),
       SimpleBullet.new(self.col+1, self.row+1, 0.25 * math.pi),

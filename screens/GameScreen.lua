@@ -25,7 +25,6 @@ function GameScreen.update(dt)
 end
 
 function GameScreen.mousepressed(x, y, button, istouch, presses)
-   -- print(x, y)
    if x == 0 or y == 0 then return end
    local col, row = xy_to_coord(x, y)
    game:add_tower(row, col, SimpleTower)

@@ -16,7 +16,7 @@ function Game.new()
    return self
 end
 
-function Game.add_tower(self, row, col, tower_type)
+function Game:add_tower(row, col, tower_type)
    if not self.grid:has_space_for_tower(row, col) then return end
 
    local tower = tower_type.new(row, col)
@@ -29,15 +29,15 @@ function Game.add_tower(self, row, col, tower_type)
    return true
 end
 
-function Game.add_bullet(self, bullet)
+function Game:add_bullet(bullet)
    self.bullets[bullet] = true
 end
 
-function Game.add_enemy(self, enemy)
+function Game:add_enemy(enemy)
    self.enemies[enemy] = true
 end
 
-function Game.update(self, dt)
+function Game:update(dt)
    for bullet, _ in pairs(self.bullets) do
       if not bullet:alive() then self.bullets[bullet] = nil end
       bullet:update(dt)
