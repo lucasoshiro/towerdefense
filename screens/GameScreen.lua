@@ -33,9 +33,12 @@ function GameScreen.draw()
    end
 end
 
+function GameScreen.update(dt)
+end
+
 function GameScreen.mousepressed(x, y, button, istouch, presses)
    local col, row = xy_to_coord(x, y)
-   g:add_tower(row, col, Tower)
+   g:add_tower(row, col, SimpleTower)
 end
 
 function xy_to_coord(x, y)

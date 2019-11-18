@@ -9,7 +9,7 @@ function love.load()
 end
  
 function love.update(dt)
-    
+   current_screen.update(dt)
 end
  
 function love.draw()
