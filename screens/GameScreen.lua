@@ -2,7 +2,6 @@
 
 local GameScreen = {}
 local Grid = require '../model/Grid'
-local Tower = require '../model/Tower'
 local SimpleTower = require '../model/SimpleTower'
 local SimpleBullet = require '../model/SimpleBullet'
 local Game = require '../model/Game'
@@ -12,7 +11,6 @@ local cell_side = 14
 local border = 1
 
 game = Game.new()
-game:add_bullet(SimpleBullet.new(20, 20))
 
 function GameScreen.draw()
    draw_grid()
@@ -24,6 +22,7 @@ function GameScreen.update(dt)
 end
 
 function GameScreen.mousepressed(x, y, button, istouch, presses)
+   print(x, y)
    local col, row = xy_to_coord(x, y)
    game:add_tower(row, col, SimpleTower)
 end

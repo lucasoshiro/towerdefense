@@ -22,6 +22,9 @@ function Game.add_tower(self, row, col, tower_type)
    self.towers[#self.towers + 1] = tower
    self.grid:add_tower(row, col, tower)
 
+   local bullets = tower:shoot()
+   for _, bullet in pairs(bullets) do self:add_bullet(bullet) end
+
    return true
 end
 

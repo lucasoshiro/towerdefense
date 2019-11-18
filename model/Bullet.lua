@@ -3,7 +3,7 @@
 local Bullet = {}
 Bullet.__index = Bullet
 
-function Bullet.new(x, y, vel_x, vel_y)
+function Bullet.new(x, y, angle, vel)
    local self = setmetatable({}, Bullet)
    self.distance = 0
    self.damage = 0
@@ -13,8 +13,8 @@ function Bullet.new(x, y, vel_x, vel_y)
 
    self.x = x
    self.y = y
-   self.vel_x = x
-   self.vel_y = y
+   self.vel_x = vel * math.cos(angle)
+   self.vel_y = vel * math.sin(angle)
 
    return self
 end

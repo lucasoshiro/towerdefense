@@ -14,7 +14,4 @@ function Tower.new(row, col)
    return self
 end
 
-function Tower.shoot()
-end
-
 return Tower
