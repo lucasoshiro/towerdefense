@@ -5,7 +5,8 @@ local Game        = require '../model/Game'
 local Enemy       = require '../model/Enemy'
 local SimpleTower = require '../model/SimpleTower'
 
--- local grid_offx, grid_offy = 10, 10
+local a_star = require '../util/a_star'
+
 local cell_side = 14
 local border = 1
 
@@ -13,10 +14,10 @@ local GridComponent = setmetatable({}, Component)
 GridComponent.__index = GridComponent
 
 game = Game.new()
-game:add_enemy(Enemy.new(0, 20, 1, 5))
+-- game:add_enemy(Enemy.new(0, 20, 1, 5))
 
 function GridComponent.new()
-   local self = setmetatable(Component.new(70, 70), GridComponent)
+   local self = setmetatable(Component.new(10, 10), GridComponent)
    self.__index = GridComponent
    return self
 end
@@ -25,6 +26,7 @@ function GridComponent:draw()
    self:draw_grid()
    self:draw_bullets()
    self:draw_enemies()
+   self:draw_path({1, 1}, {40, 40})
 end
 
 function GridComponent:update(dt)
@@ -86,6 +88,37 @@ function GridComponent:draw_enemies()
    for enemy, _ in pairs(game.enemies) do
       local x, y = self:coord_to_xy(enemy.x, enemy.y)
       love.graphics.circle("fill", x, y, 5)
+   end
+end
+
+function GridComponent:draw_path(start, goal)
+   local grid = {}
+   for i = 1, 10 do
+      grid[i] = {}
+      for j = 1, 10 do
+	 grid[i][j] = false
+      end
+   end
+
+   local grid = game.grid
+
+   local dist = function(p)
+      local delta_x = p[1] - goal[1]
+      local delta_y = p[2] - goal[2]
+      return math.sqrt(delta_x^2 + delta_y^2)
+   end
+
+   local path = (a_star(grid.grid,
+			dist, start, goal,
+			grid.height, grid.width))
+
+   love.graphics.setColor(1, 0, 0)
+
+   for _, node in ipairs(path) do
+      local x, y = self:coord_to_xy(node[2], node[1])
+      love.graphics.rectangle("fill", x, y,
+			      cell_side - 2*border,
+			      cell_side - 2*border)
    end
 end
 

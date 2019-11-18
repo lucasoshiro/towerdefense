@@ -4,9 +4,24 @@ local pqueue = {}
 
 function left(i)   return i*2 end
 function right(i)  return i*2 + 1 end
-function parent(i) return i//2 end
+function parent(i) return math.floor(i / 2) end
 
-pqueue.w8 = function(n) return n end
+local entry = {}
+function entry:__lt(other)
+   return self.count < other.count or
+      (self.count == other.count) and self.f(self.value) < other.f(other.value)
+end
+
+function entry:__gt(other)
+   return self.count > other.count or
+      (self.count == other.count) and self.f(self.value) > other.f(other.value)
+end
+
+function entry.new(count, f, value)
+   local e = {count = count; f = f; value = value}
+   setmetatable(e, entry)
+   return e
+end
 
 function pqueue:pop()
    min = self[1]
@@ -21,7 +36,7 @@ end
 function pqueue:push(v)
    self[#self+1] = v
    local i = #self
-   while i >= 2 and pqueue.w8(self[parent(i)]) > pqueue.w8(self[i]) do
+   while i >= 2 and self[parent(i)] > self[i] do
       self[parent(i)], self[i] = self[i], self[parent(i)]
       i = parent(i)
    end
@@ -31,8 +46,8 @@ function pqueue:min_heapify(i)
    local l, r = left(i), right(i)
    local m = i
 
-   if l <= #self and pqueue.w8(self[l]) < pqueue.w8(self[i]) then m = l end
-   if r <= #self and pqueue.w8(self[r]) < pqueue.w8(self[m]) then m = r end
+   if l <= #self and self[l] < self[i] then m = l end
+   if r <= #self and self[r] < self[m] then m = r end
 
    if m ~= i then
       self[i], self[m] = self[m], self[i]
@@ -46,14 +61,13 @@ function pqueue:clear()
    end
 end
 
-function neighbours(grid, x, y)
+function neighbours(grid, h, w, x, y)
    local n = {}
 
-   for i = math.max(1, x-1), math.min(#grid, x+1) do
-      for j = math.max(1, y-1), math.min(#grid[i], y+1) do
-         if not(i == x and j == y) then n[#n+1] = {i, j} end
-      end
-   end
+   if x-1 > 0  and not grid[x-1][y] then n[#n+1] = {x-1, y} end
+   if x+1 <= h and not grid[x+1][y] then n[#n+1] = {x+1, y} end
+   if y-1 > 0  and not grid[x][y-1] then n[#n+1] = {x, y-1} end
+   if y+1 <= w and not grid[x][y+1] then n[#n+1] = {x, y+1} end
 
    return n
 end
@@ -64,62 +78,54 @@ function recreate_path(previous, goal)
 
    while node do
       path[#path+1] = node
-      local x, y = table.unpack(node)
+      local x, y = node[1], node[2]
       node = previous[x][y]
    end
 
    return path
 end
 
-function a_star(grid, cost, start, goal)
-   pqueue.w8 = cost
+function a_star(grid, heuristic, start, goal, h, w)
+   local count = 0
    pqueue:clear()
-   pqueue:push(start)
+   pqueue:push(entry.new(count, heuristic, start))
 
-   local goal_x, goal_y = table.unpack(goal)
+   local goal_x, goal_y = goal[1], goal[2]
 
    local reached = {}
-   for i = 1, #grid do reached[i] = {} end
-   reached[start[1]][start[2]] = true
+   for i = 1, h do reached[i] = {} end
+   reached[start[1]][start[2]] = 0
 
    local previous = {}
-   for i = 1, #grid do previous[i] = {} end
+   for i = 1, h do previous[i] = {} end
 
    while #pqueue > 0 do
-      local node = pqueue:pop()
-      local x, y = table.unpack(node)
+      local node = pqueue:pop().value
+      local x, y = node[1], node[2]
 
       if x == goal_x and y == goal_y then
+
 	 return recreate_path(previous, goal)
       end
 
-      local nbs = neighbours(grid, x, y)
+      local nbs = neighbours(grid, h, w, x, y)
 
       for _, n in ipairs(nbs) do
-	 local n_x, n_y = table.unpack(n)
+	 local n_x, n_y = n[1], n[2]
 
-	 if not reached[n_x][n_y] then
-	    reached[n_x][n_y] = true
+	 local cost = reached[x][y] + 1
+
+	 if (not reached[n_x][n_y]) or (cost < reached[n_x][n_y]) then
+	    reached[n_x][n_y] = cost
 	    previous[n_x][n_y] = {x, y}
-	    pqueue:push(n)
+	    pqueue:push(entry.new(count, heuristic, n))
 	 end
       end
+
+      count = count + 1
    end
+
+   return nil
 end
 
-local grid = {}
-for i = 1, 10 do
-   grid[i] = {}
-   for j = 1, 10 do
-      grid[i][j] = false
-   end
-end
-
-local path = (a_star(grid,
-		     function(p)
-			return p[1] + p[2]
-		     end, {1, 1}, {10, 10}))
-
-for _, node in ipairs(path) do
-   print(table.unpack(node))
-end
+return a_star
