@@ -7,11 +7,12 @@ function Enemy.new(x, y, vel, life)
    local self = setmetatable({}, Enemy)
    self.__index = self
 
-   self.x = x
-   self.y = y
+   self.vel = vel
 
-   self.vel_x = vel
-   self.vel_y = 0
+   self.x, self.y = x, y
+
+   self.vel_x = 0
+   self.vel_y = self.vel
 
    self.life = life
 
@@ -19,9 +20,26 @@ function Enemy.new(x, y, vel, life)
 end
 
 function Enemy:update(dt)
+   local x = self.x
+   local y = self.y
+
    self.x = self.x + self.vel_x * dt
    self.y = self.y + self.vel_y * dt
+
+   if (math.floor(self.x + 0.5) ~= math.floor(x + 0.5) or
+       math.floor(self.y + 0.5) ~= math.floor(y + 0.5)) then
+
+      self:refresh_path()
+      self:refresh_vel()
+   end
 end
+
+function Enemy:refresh_path()
+end
+
+function Enemy:refresh_vel()
+end
+
 
 function Enemy:alive()
    return self.life > 0

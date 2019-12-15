@@ -77,7 +77,7 @@ function recreate_path(previous, goal)
    local path = {}
 
    while node do
-      path[#path+1] = node
+      table.insert(path, 1, node)
       local x, y = node[1], node[2]
       node = previous[x][y]
    end
@@ -116,6 +116,7 @@ function a_star(grid, heuristic, start, goal, h, w)
 	 local cost = reached[x][y] + 1
 
 	 if (not reached[n_x][n_y]) or (cost < reached[n_x][n_y]) then
+	    if not reached[n_x][n_y] then pqueue:push(entry.new(count, heuristic, n)) end
 	    reached[n_x][n_y] = cost
 	    previous[n_x][n_y] = {x, y}
 	    pqueue:push(entry.new(count, heuristic, n))
