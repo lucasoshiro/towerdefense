@@ -32,6 +32,7 @@ function GridComponent:draw()
    end
    self:draw_towers()
    self:draw_enemies()
+   self:draw_hlighted()
 end
 
 function GridComponent:update(dt)
@@ -41,6 +42,18 @@ end
 function GridComponent:mousepressed(x, y)
    local col, row = self:xy_to_coord(x, y)
    game:add_tower(row, col, SimpleTower)
+end
+
+function GridComponent:mousemoved(x, y, dx, dy)
+   local col, row = self:xy_to_coord(x, y)
+   local w, h = game.grid.width, game.grid.height
+   if (col >= 1 and col < w and  row >= 1 and row < h) then
+      self.hlighted_col = col
+      self.hlighted_row = row
+   else
+      self.hlighted_col = nil
+      self.hlighted_row = nil
+   end
 end
 
 function GridComponent:xy_to_coord(x, y)
@@ -57,7 +70,7 @@ function GridComponent:coord_to_xy(c_x, c_y)
 end
 
 function GridComponent:draw_grid()
-   love.graphics.setColor(0.2, 0.9, 1)
+   love.graphics.setColor(0.8, 0.9, 0.8)
    g = game.grid
 
    for i = 1, g.height do
@@ -95,7 +108,8 @@ function GridComponent:draw_enemies()
       local x, y
       -- square
       love.graphics.setColor(0, 0.5, 0)
-      x, y = self:coord_to_xy(math.floor(enemy.y + 0.5), math.floor(enemy.x + 0.5))
+      x, y = self:coord_to_xy(math.floor(enemy.y + 0.5),
+			      math.floor(enemy.x + 0.5))
       love.graphics.rectangle("fill", x, y,
 			      cell_side - 2*border,
 			      cell_side - 2*border)
@@ -105,7 +119,7 @@ function GridComponent:draw_enemies()
       x = x + cell_side/2
       y = y + cell_side/2
       love.graphics.circle("fill", x, y, cell_side/2)
- 
+
    end
 end
 
@@ -126,6 +140,18 @@ function GridComponent:draw_path(start, goal)
 			      cell_side - 2*border,
 			      cell_side - 2*border)
    end
+end
+
+function GridComponent:draw_hlighted()
+   local col, row = self.hlighted_col, self.hlighted_row
+   if not (col and row) then return end
+
+   local x, y = self:coord_to_xy(col, row)
+
+   love.graphics.setColor(0.5, 0.6, 0.8, 0.8)
+   love.graphics.rectangle("fill", x, y,
+			   2*cell_side - 2*border,
+			   2*cell_side - 2*border)
 end
 
 function GridComponent:draw_enemy_path(enemy)

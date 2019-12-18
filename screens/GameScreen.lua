@@ -18,4 +18,8 @@ function GameScreen.mousepressed(x, y, button, istouch, presses)
    grid_component:mousepressed(x, y)
 end
 
+function GameScreen.mousemoved(x, y, dx, dy, istouch)
+   grid_component:mousemoved(x, y, dx, dy)
+end
+
 return GameScreen
