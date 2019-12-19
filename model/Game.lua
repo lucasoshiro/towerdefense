@@ -35,6 +35,14 @@ function Game:add_enemy(enemy)
    self.enemies[enemy] = true
 end
 
+function Game:remove_bullet(bullet)
+   self.bullets[bullet] = nil
+end
+
+function Game:remove_enemy(enemy)
+   self.enemies[enemy] = nil
+end
+
 function Game:update(dt)
    for bullet, _ in pairs(self.bullets) do
       if not bullet:alive() then self.bullets[bullet] = nil end
@@ -51,6 +59,8 @@ function Game:update(dt)
          self:add_bullet(bullet)
       end
    end
+
+   self:handle_collisions()
 end
 
 function Game:get_enemies_on_radius(col, row, radius)
@@ -62,6 +72,26 @@ function Game:get_enemies_on_radius(col, row, radius)
       end
    end
    return near_enemies
+end
+
+function Game:handle_collisions()
+   for enemy, _ in pairs(self.enemies) do
+      for bullet, __ in pairs(self.bullets) do
+	 local d = dist({enemy.x, enemy.y}, {bullet.row, bullet.col})
+	 local penetration = 0.05
+
+	 if d <= (enemy.radius + bullet.radius - penetration) then
+	    self:remove_bullet(bullet)
+
+	    enemy:hurt(bullet.damage)
+
+	    if not enemy:alive() then
+	       self:remove_enemy(enemy)
+	    end
+
+	 end
+      end
+   end
 end
 
 return Game

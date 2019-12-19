@@ -65,6 +65,10 @@ function GridComponent:coord_to_xy(c_x, c_y)
    return x, y
 end
 
+function GridComponent:vdim_to_dim(v_dim)
+   return v_dim * (cell_side + 2 * border)
+end
+
 function GridComponent:draw_grid()
    love.graphics.setColor(0.8, 0.9, 0.8)
    g = game.grid
@@ -94,7 +98,10 @@ function GridComponent:draw_bullets()
    love.graphics.setColor(0.0, 0.0, 1)
    for bullet, _ in pairs(game.bullets) do
       local x, y = self:coord_to_xy(bullet.col, bullet.row)
-      love.graphics.circle("fill", x, y, 5)
+      local radius = self:vdim_to_dim(bullet.radius)
+      x = x + radius
+      y = y + radius
+      love.graphics.circle("fill", x, y, radius)
    end
 end
 
@@ -112,9 +119,10 @@ function GridComponent:draw_enemies()
 
       love.graphics.setColor(1, 0, 0)
       x, y = self:coord_to_xy(enemy.y, enemy.x)
-      x = x + cell_side/2
-      y = y + cell_side/2
-      love.graphics.circle("fill", x, y, cell_side/2)
+      local radius = self:vdim_to_dim(enemy.radius)
+      x = x + radius
+      y = y + radius
+      love.graphics.circle("fill", x, y, radius)
 
    end
 end

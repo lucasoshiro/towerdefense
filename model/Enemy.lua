@@ -3,7 +3,7 @@
 local Enemy = {}
 Enemy.__index = Enemy
 
-function Enemy.new(x, y, vel, life)
+function Enemy.new(x, y, vel, life, radius)
    local self = setmetatable({}, Enemy)
    self.__index = self
 
@@ -15,6 +15,7 @@ function Enemy.new(x, y, vel, life)
    self.vel_y = self.vel
 
    self.life = life
+   self.radius = radius
 
    return self
 end
