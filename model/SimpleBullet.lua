@@ -5,8 +5,8 @@ local Bullet = require '../model/Bullet'
 local SimpleBullet = setmetatable({}, Bullet)
 SimpleBullet.__index = SimpleBullet
 
-function SimpleBullet.new(x, y, angle)
-   local self = setmetatable(Bullet.new(x, y, angle, 4), SimpleBullet)
+function SimpleBullet.new(col, row, angle)
+   local self = setmetatable(Bullet.new(col, row, angle, 30), SimpleBullet)
    self.__index = SimpleBullet
    self.damage = 1
    self.distance = 4

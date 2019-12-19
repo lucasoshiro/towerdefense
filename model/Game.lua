@@ -1,6 +1,7 @@
 #!/usr/bin/env lua
 
 local Grid = require '../model/Grid'
+local dist = require '../util/dist'
 
 local Game = {}
 Game.__index = Game
@@ -23,9 +24,6 @@ function Game:add_tower(row, col, tower_type)
    self.towers[#self.towers + 1] = tower
    self.grid:add_tower(row, col, tower)
 
-   -- local bullets = tower:shoot()
-   -- for _, bullet in pairs(bullets) do self:add_bullet(bullet) end
-
    return true
 end
 
@@ -47,6 +45,23 @@ function Game:update(dt)
       if not enemy:alive() then self.enemy[enemy] = nil end
       enemy:update(dt)
    end
+
+   for _, tower in ipairs(self.towers) do
+      for __, bullet in ipairs(tower:try_shoot()) do
+         self:add_bullet(bullet)
+      end
+   end
+end
+
+function Game:get_enemies_on_radius(col, row, radius)
+   local tower = {col + 1, row + 1}
+   local near_enemies = {}
+   for enemy, _ in pairs(self.enemies) do
+      if dist(tower, {enemy.y, enemy.x}) < radius then
+         near_enemies[#near_enemies + 1] = enemy
+      end
+   end
+   return near_enemies
 end
 
 return Game

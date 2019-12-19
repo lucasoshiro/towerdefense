@@ -1,11 +1,9 @@
 #!/usr/bin/env lua
 
 local Component   = require '../screen_components/Component'
-local Game        = require '../model/Game'
 local Enemy       = require '../model/Enemy'
-local SimpleEnemy = require '../model/SimpleEnemy'
-local SimpleTower = require '../model/SimpleTower'
 local dist        = require '../util/dist'
+local SimpleTower = require '../model/SimpleTower'
 
 local a_star = require '../util/a_star'
 
@@ -15,9 +13,6 @@ local border = 1
 local GridComponent = setmetatable({}, Component)
 GridComponent.__index = GridComponent
 
-game = Game.new()
-game:add_enemy(SimpleEnemy.new(1, 1, 40, 40, game.grid))
-
 function GridComponent.new()
    local self = setmetatable(Component.new(10, 10), GridComponent)
    self.__index = GridComponent
@@ -26,12 +21,12 @@ end
 
 function GridComponent:draw()
    self:draw_grid()
-   self:draw_bullets()
    for enemy, _ in pairs(game.enemies) do
       self:draw_enemy_path(enemy)
    end
    self:draw_towers()
    self:draw_enemies()
+   self:draw_bullets()
    self:draw_hlighted()
 end
 
@@ -97,7 +92,7 @@ end
 function GridComponent:draw_bullets()
    love.graphics.setColor(0.0, 0.0, 1)
    for bullet, _ in pairs(game.bullets) do
-      local x, y = self:coord_to_xy(bullet.x, bullet.y)
+      local x, y = self:coord_to_xy(bullet.col, bullet.row)
       love.graphics.circle("fill", x, y, 5)
    end
 end
