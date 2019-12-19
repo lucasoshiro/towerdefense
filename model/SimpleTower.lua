@@ -6,14 +6,16 @@ local SimpleBullet = require '../model/SimpleBullet'
 local SimpleTower = setmetatable({}, Tower)
 SimpleTower.__index = SimpleTower
 
+SimpleTower.radius = 7
+
 function SimpleTower.new(row, col)
    local self = setmetatable(Tower.new(row, col), SimpleTower)
    self.__index = SimpleTower
    self.identifier = 'S'
    self.bullet_type = SimpleBullet
+   self.radius = SimpleTower.radius
    self.col = col
    self.row = row
-   self.radius = 20
 
    self.shoot_interval = 0.3
    self.last_shoot = love.timer.getTime()

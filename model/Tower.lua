@@ -7,7 +7,7 @@ function Tower.new(row, col)
    local self = setmetatable({}, Tower)
    self.__index = self
 
-   self.radius = 5
+   self.radius = 0
    self.identifier = 'T'
    self.col = col
    self.row = row
