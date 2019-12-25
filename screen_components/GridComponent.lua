@@ -22,13 +22,14 @@ end
 
 function GridComponent:draw()
    self:draw_grid()
-   for enemy, _ in pairs(game.enemies) do
-      self:draw_enemy_path(enemy)
-   end
+   -- for enemy, _ in pairs(game.enemies) do
+   --    self:draw_enemy_path(enemy)
+   -- end
    self:draw_source_and_goal()
    self:draw_towers()
    self:draw_enemies()
    self:draw_bullets()
+   self:draw_life()
    self:draw_hlighted()
 end
 
@@ -107,7 +108,6 @@ function GridComponent:draw_bullets()
 end
 
 function GridComponent:draw_enemies()
-
    for enemy, _ in pairs(game.enemies) do
       local x, y = self:coord_to_xy(enemy.y, enemy.x)
       local inner_radius = self:vdim_to_dim(enemy.radius - 0.15)
@@ -184,6 +184,19 @@ function GridComponent:draw_source_and_goal()
    love.graphics.rectangle("fill", x, y,
 			   cell_side - 2*border,
 			   cell_side - 2*border)
+end
+
+function GridComponent:draw_life()
+   for enemy, _ in pairs(game.enemies) do
+      local x, y = self:coord_to_xy(enemy.y - 0.25, enemy.x + 1.5)
+      local life = enemy.life / enemy.max_life
+
+      love.graphics.setColor(0.0, 0.5, 0)
+      love.graphics.rectangle("fill", x, y,
+			      1.5 * cell_side * life,
+			      0.3 * cell_side)
+
+   end
 end
 
 return GridComponent

@@ -16,6 +16,7 @@ function Enemy.new(x, y, goal_x, goal_y, vel, life, radius)
    self.vel_y = self.vel
 
    self.life = life
+   self.max_life = life
    self.radius = radius
 
    return self
