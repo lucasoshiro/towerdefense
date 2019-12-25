@@ -16,9 +16,11 @@ function Game.new()
    self.towers = {}
    self.bullets = {}
    self.enemies = {}
-   self.schedule = CrowdSchedule.new()
-   -- self:add_enemy(SimpleEnemy.new(1, 1, 40, 40, self.grid))
 
+   self.source_row, self.source_col = 20, 1
+   self.goal_row, self.goal_col = 20, 40
+
+   self.schedule = CrowdSchedule.new()
    return self
 end
 
@@ -49,28 +51,9 @@ function Game:remove_enemy(enemy)
 end
 
 function Game:update(dt)
-   for bullet, _ in pairs(self.bullets) do
-      if not bullet:alive() then self.bullets[bullet] = nil end
-      bullet:update(dt)
-   end
-
-   for enemy, _ in pairs(self.enemies) do
-      if not enemy:alive() then self.enemy[enemy] = nil end
-      enemy:update(dt)
-   end
-
-   for _, tower in ipairs(self.towers) do
-      for __, bullet in ipairs(tower:try_shoot()) do
-         self:add_bullet(bullet)
-      end
-   end
-
-   local enemy_type = self.schedule:try_new_enemy()
-
-   if enemy_type then
-      self:add_enemy(enemy_type.new(1, 1, 40, 40, self.grid))
-   end
-
+   self:update_bullets(dt)
+   self:update_enemies(dt)
+   self:update_towers()
    self:handle_collisions()
 end
 
@@ -105,10 +88,37 @@ function Game:handle_collisions()
    end
 end
 
-function Game:schedule_push(enemy_type)
+function Game:update_bullets(dt)
+   for bullet, _ in pairs(self.bullets) do
+      if not bullet:alive() then self.bullets[bullet] = nil end
+      bullet:update(dt)
+   end
 end
 
-function Game:schedule_run()
+function Game:update_enemies(dt)
+   for enemy, _ in pairs(self.enemies) do
+      if not enemy:alive() then self.enemy[enemy] = nil end
+      if (math.floor(enemy.x) == self.goal_row and
+	  math.floor(enemy.y) == self.goal_col) then
+	 self:remove_enemy(enemy)
+      end
+
+      enemy:update(dt)
+   end
+
+   local enemy_type = self.schedule:try_new_enemy()
+   if enemy_type then
+      self:add_enemy(enemy_type.new(self.source_row, self.source_col,
+				    self.goal_row, self.goal_col, self.grid))
+   end
+end
+
+function Game:update_towers()
+   for _, tower in ipairs(self.towers) do
+      for __, bullet in ipairs(tower:try_shoot()) do
+         self:add_bullet(bullet)
+      end
+   end
 end
 
 

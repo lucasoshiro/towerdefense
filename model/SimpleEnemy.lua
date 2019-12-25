@@ -8,13 +8,10 @@ local SimpleEnemy = setmetatable({}, Enemy)
 SimpleEnemy.__index = SimpleEnemy
 
 function SimpleEnemy.new(x, y, goal_x, goal_y, grid)
-   local self = setmetatable(Enemy.new(x, y, 0.75, 300, 0.5), SimpleEnemy)
+   local self = setmetatable(Enemy.new(x, y, goal_x, goal_y, 0.75, 300, 0.5), SimpleEnemy)
    self.__index = SimpleEnemy
 
    self.grid = grid
-
-   self.goal_x, self.goal_y = goal_x, goal_y
-
    self:refresh_path()
    self:refresh_vel()
 
@@ -34,6 +31,8 @@ end
 
 function SimpleEnemy:refresh_vel()
    local fst, snd = self.path[1], self.path[2]
+
+   if not fst or not snd then return end
 
    local delta_x, delta_y = snd[1] - self.x, snd[2] - self.y
 

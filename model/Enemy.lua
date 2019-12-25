@@ -3,13 +3,14 @@
 local Enemy = {}
 Enemy.__index = Enemy
 
-function Enemy.new(x, y, vel, life, radius)
+function Enemy.new(x, y, goal_x, goal_y, vel, life, radius)
    local self = setmetatable({}, Enemy)
    self.__index = self
 
    self.vel = vel
 
    self.x, self.y = x, y
+   self.goal_x, self.goal_y = goal_x, goal_y
 
    self.vel_x = 0
    self.vel_y = self.vel
@@ -41,13 +42,17 @@ end
 function Enemy:refresh_vel()
 end
 
-
 function Enemy:alive()
    return self.life > 0
 end
 
 function Enemy:hurt(hurt)
    self.life = self.life - hurt
+end
+
+function Enemy:reached()
+   return (math.floor(self.x) == math.floor(self.goal_x) and
+	   math.floor(self.y) == math.floor(self.goal_y))
 end
 
 return Enemy

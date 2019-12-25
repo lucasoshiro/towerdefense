@@ -25,6 +25,7 @@ function GridComponent:draw()
    for enemy, _ in pairs(game.enemies) do
       self:draw_enemy_path(enemy)
    end
+   self:draw_source_and_goal()
    self:draw_towers()
    self:draw_enemies()
    self:draw_bullets()
@@ -108,22 +109,16 @@ end
 function GridComponent:draw_enemies()
 
    for enemy, _ in pairs(game.enemies) do
-      local x, y
-      -- square
-      love.graphics.setColor(0, 0.5, 0)
-      x, y = self:coord_to_xy(math.floor(enemy.y + 0.5),
-			      math.floor(enemy.x + 0.5))
-      -- love.graphics.rectangle("fill", x, y,
-      -- 			      cell_side - 2*border,
-      -- 			      cell_side - 2*border)
+      local x, y = self:coord_to_xy(enemy.y, enemy.x)
+      local inner_radius = self:vdim_to_dim(enemy.radius - 0.15)
+      local outer_radius = self:vdim_to_dim(enemy.radius)
 
-      love.graphics.setColor(1, 0, 0)
-      x, y = self:coord_to_xy(enemy.y, enemy.x)
-      local radius = self:vdim_to_dim(enemy.radius)
-      x = x + radius
-      y = y + radius
-      love.graphics.circle("fill", x, y, radius)
-
+      x = x + outer_radius
+      y = y + outer_radius
+      love.graphics.setColor(0.5, 0.25, 0)
+      love.graphics.circle("fill", x, y, outer_radius)
+      love.graphics.setColor(1, 0.5, 0)
+      love.graphics.circle("fill", x, y, inner_radius)
    end
 end
 
@@ -172,6 +167,23 @@ function GridComponent:draw_enemy_path(enemy)
 			      cell_side - 2*border,
 			      cell_side - 2*border)
    end
+end
+
+function GridComponent:draw_source_and_goal()
+   local x, y
+
+   love.graphics.setColor(1, 0, 0)
+   x, y = self:coord_to_xy(game.source_col, game.source_row)
+   love.graphics.rectangle("fill", x, y,
+			   cell_side - 2*border,
+			   cell_side - 2*border)
+
+
+   love.graphics.setColor(0, 1, 0)
+   x, y = self:coord_to_xy(game.goal_col, game.goal_row)
+   love.graphics.rectangle("fill", x, y,
+			   cell_side - 2*border,
+			   cell_side - 2*border)
 end
 
 return GridComponent
