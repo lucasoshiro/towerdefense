@@ -2,13 +2,11 @@
 
 local GridComponent = require '../screen_components/GridComponent'
 local Game          = require '../model/Game'
-local SimpleEnemy   = require '../model/SimpleEnemy'
 
 local GameScreen = {}
 local grid_component = GridComponent.new()
 
 game = Game.new()
-game:add_enemy(SimpleEnemy.new(1, 1, 40, 40, game.grid))
 
 function GameScreen.draw()
    grid_component:draw()

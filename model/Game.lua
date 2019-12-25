@@ -3,6 +3,9 @@
 local Grid = require '../model/Grid'
 local dist = require '../util/dist'
 
+local SimpleEnemy = require '../model/SimpleEnemy'
+local CrowdSchedule = require '../model/CrowdSchedule'
+
 local Game = {}
 Game.__index = Game
 
@@ -13,6 +16,8 @@ function Game.new()
    self.towers = {}
    self.bullets = {}
    self.enemies = {}
+   self.schedule = CrowdSchedule.new()
+   -- self:add_enemy(SimpleEnemy.new(1, 1, 40, 40, self.grid))
 
    return self
 end
@@ -60,6 +65,12 @@ function Game:update(dt)
       end
    end
 
+   local enemy_type = self.schedule:try_new_enemy()
+
+   if enemy_type then
+      self:add_enemy(enemy_type.new(1, 1, 40, 40, self.grid))
+   end
+
    self:handle_collisions()
 end
 
@@ -93,5 +104,12 @@ function Game:handle_collisions()
       end
    end
 end
+
+function Game:schedule_push(enemy_type)
+end
+
+function Game:schedule_run()
+end
+
 
 return Game

@@ -8,7 +8,7 @@ local SimpleEnemy = setmetatable({}, Enemy)
 SimpleEnemy.__index = SimpleEnemy
 
 function SimpleEnemy.new(x, y, goal_x, goal_y, grid)
-   local self = setmetatable(Enemy.new(x, y, 0.2, 300, 0.5), SimpleEnemy)
+   local self = setmetatable(Enemy.new(x, y, 0.75, 300, 0.5), SimpleEnemy)
    self.__index = SimpleEnemy
 
    self.grid = grid

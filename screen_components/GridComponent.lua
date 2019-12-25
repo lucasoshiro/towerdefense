@@ -113,9 +113,9 @@ function GridComponent:draw_enemies()
       love.graphics.setColor(0, 0.5, 0)
       x, y = self:coord_to_xy(math.floor(enemy.y + 0.5),
 			      math.floor(enemy.x + 0.5))
-      love.graphics.rectangle("fill", x, y,
-			      cell_side - 2*border,
-			      cell_side - 2*border)
+      -- love.graphics.rectangle("fill", x, y,
+      -- 			      cell_side - 2*border,
+      -- 			      cell_side - 2*border)
 
       love.graphics.setColor(1, 0, 0)
       x, y = self:coord_to_xy(enemy.y, enemy.x)

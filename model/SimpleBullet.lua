@@ -4,7 +4,7 @@ local Bullet = require '../model/Bullet'
 
 local SimpleBullet = setmetatable({}, Bullet)
 SimpleBullet.__index = SimpleBullet
-SimpleBullet.distance = 20
+SimpleBullet.distance = 5
 
 function SimpleBullet.new(col, row, angle)
    local self = setmetatable(Bullet.new(col, row, angle, 10, 0.3),
