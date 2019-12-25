@@ -1,12 +1,9 @@
 #!/usr/bin/env lua
 
 local Component   = require '../screen_components/Component'
-local Enemy       = require '../model/Enemy'
-local SimpleTower = require '../model/SimpleTower'
 local dist        = require '../util/dist'
 local SimpleTower = require '../model/SimpleTower'
-
-local a_star = require '../util/a_star'
+local a_star      = require '../util/a_star'
 
 local cell_side = 14
 local border = 1
@@ -22,9 +19,6 @@ end
 
 function GridComponent:draw()
    self:draw_grid()
-   -- for enemy, _ in pairs(game.enemies) do
-   --    self:draw_enemy_path(enemy)
-   -- end
    self:draw_source_and_goal()
    self:draw_towers()
    self:draw_enemies()
@@ -63,7 +57,6 @@ end
 function GridComponent:coord_to_xy(c_x, c_y)
    local x = self:canvasX(cell_side * c_x + border)
    local y = self:canvasY(cell_side * c_y + border)
-
    return x, y
 end
 
@@ -73,14 +66,11 @@ end
 
 function GridComponent:draw_grid()
    love.graphics.setColor(0.8, 0.9, 0.8)
-   g = game.grid
+   local g = game.grid
 
    for i = 1, g.height do
       for j = 1, g.width do
-	 local x, y = self:coord_to_xy(i, j)
-	 love.graphics.rectangle("fill", x, y,
-				 cell_side - 2*border,
-				 cell_side - 2*border)
+	 self:draw_grid_cell(i, j)
       end
    end
 end
@@ -122,25 +112,6 @@ function GridComponent:draw_enemies()
    end
 end
 
-function GridComponent:draw_path(start, goal)
-   local grid = game.grid
-
-   local h = function(p) return dist(p, goal) end
-
-   local path = (a_star(grid.grid,
-			h, start, goal,
-			grid.height, grid.width))
-
-   love.graphics.setColor(1, 0, 0)
-
-   for _, node in ipairs(path) do
-      local x, y = self:coord_to_xy(node[2], node[1])
-      love.graphics.rectangle("fill", x, y,
-			      cell_side - 2*border,
-			      cell_side - 2*border)
-   end
-end
-
 function GridComponent:draw_hlighted()
    local col, row = self.hlighted_col, self.hlighted_row
    local radius = SimpleTower.radius
@@ -162,10 +133,7 @@ end
 function GridComponent:draw_enemy_path(enemy)
    love.graphics.setColor(0.3, 0, 0.5)
    for _, node in ipairs(enemy.path) do
-      local x, y = self:coord_to_xy(node[2], node[1])
-      love.graphics.rectangle("fill", x, y,
-			      cell_side - 2*border,
-			      cell_side - 2*border)
+      self:draw_grid_cell(node[2], node[1])
    end
 end
 
@@ -173,17 +141,10 @@ function GridComponent:draw_source_and_goal()
    local x, y
 
    love.graphics.setColor(1, 0, 0)
-   x, y = self:coord_to_xy(game.source_col, game.source_row)
-   love.graphics.rectangle("fill", x, y,
-			   cell_side - 2*border,
-			   cell_side - 2*border)
-
+   self:draw_grid_cell(game.source_col, game.source_row)
 
    love.graphics.setColor(0, 1, 0)
-   x, y = self:coord_to_xy(game.goal_col, game.goal_row)
-   love.graphics.rectangle("fill", x, y,
-			   cell_side - 2*border,
-			   cell_side - 2*border)
+   self:draw_grid_cell(game.goal_col, game.goal_row)
 end
 
 function GridComponent:draw_life()
@@ -195,8 +156,14 @@ function GridComponent:draw_life()
       love.graphics.rectangle("fill", x, y,
 			      1.5 * cell_side * life,
 			      0.3 * cell_side)
-
    end
+end
+
+function GridComponent:draw_grid_cell(col, row)
+   local x, y = self:coord_to_xy(col, row)
+   love.graphics.rectangle("fill", x, y,
+                           cell_side - 2*border,
+                           cell_side - 2*border)
 end
 
 return GridComponent
