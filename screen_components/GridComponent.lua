@@ -20,7 +20,6 @@ end
 
 function GridComponent:draw()
    self:draw_bg()
-   -- self:draw_grid()
    self:draw_source_and_goal()
    self:draw_towers()
    self:draw_enemies()
@@ -51,14 +50,14 @@ function GridComponent:mousemoved(x, y, dx, dy)
 end
 
 function GridComponent:xy_to_coord(x, y)
-   local c_x = math.floor(self:compX(x) / cell_side)
-   local c_y = math.floor(self:compY(y) / cell_side)
+   local c_x = math.floor(self:compX(x) / cell_side) + 1
+   local c_y = math.floor(self:compY(y) / cell_side) + 1
    return c_x, c_y
 end
 
 function GridComponent:coord_to_xy(c_x, c_y)
-   local x = self:canvasX(cell_side * c_x + border)
-   local y = self:canvasY(cell_side * c_y + border)
+   local x = self:canvasX(cell_side * (c_x-1) + border)
+   local y = self:canvasY(cell_side * (c_y-1) + border)
    return x, y
 end
 
@@ -187,10 +186,8 @@ function GridComponent:draw_bg()
       cell_side * game.grid.width - border,
       cell_side * game.grid.height - border,
       self.background:getDimensions())
-   -- love.graphics.setColor(1, 1, 0)
-   -- love.graphics.draw(image, x - border, y - border,
-   -- )
-   love.graphics.reset()
+
+   love.graphics.setColor(1, 1, 1)
    love.graphics.draw(self.background, quad, x, y)
    love.graphics.setColor(1, 1, 1)
    love.graphics.setLineWidth(border)

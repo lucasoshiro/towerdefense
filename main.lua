@@ -1,11 +1,15 @@
 #!/usr/bin/env lua
 
 local GameScreen = require 'screens/GameScreen'
+local Game       = require 'model/Game'
 
 local current_screen = GameScreen
 
 function love.load()
    x, y, w, h = 20, 20, 60, 20
+   game = Game.new()
+   love.window.setMode(1000, 700)
+   love.graphics.setBackgroundColor(0.8, 0.8, 0.8)
 end
  
 function love.update(dt)

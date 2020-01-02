@@ -1,19 +1,20 @@
 #!/usr/bin/env lua
 
 local GridComponent = require '../screen_components/GridComponent'
-local Game          = require '../model/Game'
+local InfoComponent = require '../screen_components/InfoComponent'
 
 local GameScreen = {}
 local grid_component = GridComponent.new()
-
-game = Game.new()
+local info_component = InfoComponent.new()
 
 function GameScreen.draw()
    grid_component:draw()
+   info_component:draw()
 end
 
 function GameScreen.update(dt)
    grid_component:update(dt)
+   info_component:update(dt)
 end
 
 function GameScreen.mousepressed(x, y, button, istouch, presses)
