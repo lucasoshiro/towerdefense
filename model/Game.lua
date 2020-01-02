@@ -3,7 +3,8 @@
 local Grid = require '../model/Grid'
 local dist = require '../util/dist'
 
-local SimpleEnemy = require '../model/SimpleEnemy'
+local SimpleEnemy   = require '../model/SimpleEnemy'
+local SimpleTower   = require '../model/SimpleTower'
 local CrowdSchedule = require '../model/CrowdSchedule'
 
 local Game = {}
@@ -18,18 +19,35 @@ function Game.new()
    self.enemies = {}
 
    self.source_row, self.source_col = 20, 1
-   self.goal_row, self.goal_col = 20, 40
+   self.goal_row,   self.goal_col = 20, 40
+
+   self.credits = 50
+   self.selected_tower_type = SimpleTower
+
+   self.life = 10
 
    self.schedule = CrowdSchedule.new()
    return self
 end
 
+function Game:enough_credits_for_tower()
+   return self.credits >= self.selected_tower_type.price
+end
+
+function Game:game_over()
+   return self.life <= 0
+end
+
 function Game:add_tower(row, col, tower_type)
    if not self.grid:has_space_for_tower(row, col) then return end
+
+   if not self:enough_credits_for_tower() then return end
 
    local tower = tower_type.new(row, col)
    self.towers[#self.towers + 1] = tower
    self.grid:add_tower(row, col, tower)
+
+   self.credits = self.credits - self.selected_tower_type.price
 
    return true
 end
@@ -55,6 +73,8 @@ function Game:update(dt)
    self:update_enemies(dt)
    self:update_towers()
    self:handle_collisions()
+
+   if self:game_over() then os.exit(0) end
 end
 
 function Game:get_enemies_on_radius(col, row, radius)
@@ -78,11 +98,6 @@ function Game:handle_collisions()
 	    self:remove_bullet(bullet)
 
 	    enemy:hurt(bullet.damage)
-
-	    if not enemy:alive() then
-	       self:remove_enemy(enemy)
-	    end
-
 	 end
       end
    end
@@ -97,9 +112,14 @@ end
 
 function Game:update_enemies(dt)
    for enemy, _ in pairs(self.enemies) do
-      if not enemy:alive() then self.enemy[enemy] = nil end
-      if (math.floor(enemy.x) == self.goal_row and
-	  math.floor(enemy.y) == self.goal_col) then
+      if not enemy:alive() then
+	 -- Enemy died
+	 self.credits = self.credits + enemy.reward
+	 self:remove_enemy(enemy)
+      elseif (math.floor(enemy.x) == self.goal_row and
+	       math.floor(enemy.y) == self.goal_col) then
+	 -- Enemy reached the goal
+	 self.life = self.life - 1
 	 self:remove_enemy(enemy)
       end
 

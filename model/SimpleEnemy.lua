@@ -6,14 +6,16 @@ local dist   = require '../util/dist'
 
 local SimpleEnemy = setmetatable({}, Enemy)
 SimpleEnemy.__index = SimpleEnemy
+SimpleEnemy.reward = 5
 
 function SimpleEnemy.new(x, y, goal_x, goal_y, grid)
-   local self = setmetatable(Enemy.new(x, y, goal_x, goal_y, 0.75, 300, 0.5), SimpleEnemy)
+   local self = setmetatable(Enemy.new(x, y, goal_x, goal_y, 0.75, 20, 0.5), SimpleEnemy)
    self.__index = SimpleEnemy
 
    self.grid = grid
    self:refresh_path()
    self:refresh_vel()
+   self.reward = SimpleEnemy.reward
 
    return self
 end

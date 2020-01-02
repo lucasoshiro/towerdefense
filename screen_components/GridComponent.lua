@@ -76,13 +76,17 @@ function GridComponent:draw_grid()
 end
 
 function GridComponent:draw_towers()
-   love.graphics.setColor(0.5, 0.5, 0.5)
-
    for _, tower in ipairs(game.towers) do
-      local x, y = self:coord_to_xy(tower.col, tower.row)
+      local x, y
+      love.graphics.setColor(0.5, 0.5, 0.5)
+      x, y = self:coord_to_xy(tower.col, tower.row)
       love.graphics.rectangle("fill", x, y,
 			      2*cell_side - 2*border,
 			      2*cell_side - 2*border)
+
+      x, y = x + cell_side, y + cell_side
+      love.graphics.setColor(0, 0, 00)
+      love.graphics.circle("line", x, y, cell_side / 2)
    end
 end
 
@@ -114,7 +118,11 @@ end
 
 function GridComponent:draw_hlighted()
    local col, row = self.hlighted_col, self.hlighted_row
-   local radius = SimpleTower.radius
+   local tower_type = game.selected_tower_type
+
+   if not tower_type then return end
+
+   local radius = tower_type.radius
    if not (col and row) then return end
 
    local x, y = self:coord_to_xy(col, row)
@@ -124,8 +132,11 @@ function GridComponent:draw_hlighted()
 			   2*cell_side - 2*border,
 			   2*cell_side - 2*border)
 
-   x, y = self:coord_to_xy(col+1, row+1)
+   x, y = x + cell_side, y + cell_side
+   love.graphics.setColor(0, 0, 0, 0.8)
+   love.graphics.circle("line", x, y, cell_side / 2)
 
+   x, y = self:coord_to_xy(col+1, row+1)
    love.graphics.setColor(0.6, 0.2, 0.2, 0.6)
    love.graphics.circle("fill", x, y, radius * cell_side)
 end
