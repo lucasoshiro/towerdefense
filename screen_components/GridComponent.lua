@@ -14,11 +14,13 @@ GridComponent.__index = GridComponent
 function GridComponent.new()
    local self = setmetatable(Component.new(10, 10), GridComponent)
    self.__index = GridComponent
+   self.background = love.graphics.newImage('assets/img/marble_bg.png')
    return self
 end
 
 function GridComponent:draw()
-   self:draw_grid()
+   self:draw_bg()
+   -- self:draw_grid()
    self:draw_source_and_goal()
    self:draw_towers()
    self:draw_enemies()
@@ -175,6 +177,26 @@ function GridComponent:draw_grid_cell(col, row)
    love.graphics.rectangle("fill", x, y,
                            cell_side - 2*border,
                            cell_side - 2*border)
+end
+
+function GridComponent:draw_bg()
+   local x, y = self:coord_to_xy(1, 1)
+
+   local quad = love.graphics.newQuad(
+      0, 0,
+      cell_side * game.grid.width - border,
+      cell_side * game.grid.height - border,
+      self.background:getDimensions())
+   -- love.graphics.setColor(1, 1, 0)
+   -- love.graphics.draw(image, x - border, y - border,
+   -- )
+   love.graphics.reset()
+   love.graphics.draw(self.background, quad, x, y)
+   love.graphics.setColor(1, 1, 1)
+   love.graphics.setLineWidth(border)
+   love.graphics.rectangle("line", x - border, y - border,
+			   cell_side * game.grid.width + border,
+			   cell_side * game.grid.height + border)
 end
 
 return GridComponent
